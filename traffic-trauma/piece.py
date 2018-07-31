@@ -38,6 +38,9 @@ class Piece(object):
                    and self.down == other.down and self.left == other.left
         return False
 
+    def unique_colors(self):
+        return set(self.__cached_colors)
+
     def match(self, other_piece, direction):
         if not other_piece:
             return True
