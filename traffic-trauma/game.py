@@ -39,7 +39,7 @@ class Board(object):
             for c in p.unique_colors():
                 color_table[c] += 1
 
-        return color_table
+        return sorted(color_table.keys(), key=lambda color: color_table[color])
 
     def __neighbour_pieces(self, x, y):
         points = self.__neighbours_coordinates(x, y)
