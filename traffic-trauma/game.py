@@ -12,13 +12,23 @@ class Game(object):
 class TrafficTrauma(Game):
 
     def __init__(self, board):
-        self.__board_state = board
+        self.__board_state: Board = board
 
     def initial_state(self):
         pass
 
+    @property
+    def current_state(self):
+        return self.__board_state
+
     def successors(self):
-        pass
+        successor_list = list()
+        for x, y in self.current_state.frontier:
+            for p in self.current_state.possible_pieces(x, y):
+                for _ in range(4):
+                    self.current_state.put_piece(p, x, y)
+                    p = p.rotate()
+        return successor_list
 
     def is_goal(self):
         return self.__board_state.is_full()
@@ -31,6 +41,19 @@ class Board(object):
         self.__piece_table = [[None for _ in range(self.__matrix_size)] for _ in range(self.__matrix_size)]
         self.__unused_pieces: List[Piece] = piece_list
         self.__frontier = list()
+
+    @property
+    def frontier(self):
+        return self.__frontier
+
+    @frontier.setter
+    def frontier(self, new_frontier):
+        self.__frontier = new_frontier
+
+    def put_piece(self, piece, x, y):
+        if self.valid_action(piece, x, y):
+            # TODO Should continue here
+            pass
 
     def piece_frequency(self):
         color_table = defaultdict(int)
@@ -75,6 +98,7 @@ class Board(object):
     def possible_pieces(self, x, y):
         neighbours = self.__neighbour_pieces(x, y)
 
+        # TODO Should change behavior of none
         colors = [neighbours[Side.UP].down, neighbours[Side.DOWN].up,
                   neighbours[Side.RIGHT].left, neighbours[Side.LEFT].right]
 
